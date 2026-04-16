@@ -281,6 +281,10 @@
   <strong>Context:</strong> External agency will handle the build. The 2-person internal team owns and maintains the site after handoff. The question isn't just "what's the best tech" — it's <strong>"what gives us the best site we can fully own and maintain without going back to the agency."</strong>
 </div>
 
+<div style="background:#DEEBFF;border-left:4px solid #0052CC;border-radius:4px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#0747A6;line-height:1.6;">
+  <strong>Team constraints (applies to Traditional WordPress path):</strong> Minimum plugin usage — custom-build features where possible rather than relying on plugins. No Bootstrap. These constraints directly address the main performance concern with WordPress and narrow the gap with headless.
+</div>
+
 <!-- ═══════════════════════════════════════════════════════════ -->
 <!-- MAIN 3-COLUMN TABLE -->
 <!-- ═══════════════════════════════════════════════════════════ -->
@@ -325,7 +329,7 @@
       <td>Build efficiency</td>
       <td><span class="badge badge-green">High</span><br>Fastest build time → most features built within scope.</td>
       <td><span class="badge badge-red">Low</span><br>Two systems to build and wire. Roughly 1.4–1.6× the cost of a clean headless build.</td>
-      <td><span class="badge badge-green">High</span><br>Clean stack, no WP baggage. Agency hours go toward features, not compatibility fixes.</td>
+      <td><span class="badge badge-yellow">High — with caveat</span><br>Clean stack for a greenfield build. On a complex existing site like solace.com, a significant portion of agency hours goes toward content migration and schema re-architecture before any new features are built.</td>
     </tr>
 
     <tr>
@@ -369,7 +373,7 @@
       <td>
         <div class="flow-steps">
           <div class="flow-item flow-g"><div class="flow-num fn-g">1</div>CDN serves cached HTML instantly</div>
-          <div class="flow-item flow-y"><div class="flow-num fn-y">2</div>Cache miss → PHP bootstraps WordPress</div>
+          <div class="flow-item flow-y"><div class="flow-num fn-y">2</div>Cache miss → PHP initialises WordPress</div>
           <div class="flow-item flow-y"><div class="flow-num fn-y">3</div>MySQL query for content + options</div>
           <div class="flow-item flow-r"><div class="flow-num fn-r">4</div>All active plugin hooks fire on every request</div>
           <div class="flow-item flow-r"><div class="flow-num fn-r">5</div>Theme renders HTML, enqueues plugin JS/CSS</div>
@@ -380,7 +384,7 @@
       <td>
         <div class="flow-steps">
           <div class="flow-item flow-g"><div class="flow-num fn-g">1</div>CDN serves cached HTML</div>
-          <div class="flow-item flow-y"><div class="flow-num fn-y">2</div>Cache miss → WP PHP still executes</div>
+          <div class="flow-item flow-y"><div class="flow-num fn-y">2</div>Cache miss → WP PHP still initialises</div>
           <div class="flow-item flow-y"><div class="flow-num fn-y">3</div>WPGraphQL fetches content from WP</div>
           <div class="flow-item flow-n"><div class="flow-num fn-n">4</div>Next.js SSR / ISR renders React page</div>
           <div class="flow-item flow-r"><div class="flow-num fn-r">5</div>Two systems to keep in sync + patched</div>
@@ -403,11 +407,11 @@
       <td>Performance ceiling</td>
       <td>
         <div class="score-block">
-          <div class="score-row-item"><span class="score-name">Perf score</span><div class="bar-outer"><div class="bar-inner" style="width:85%;background:#FF8B00;"></div></div><span class="score-val" style="color:#FF8B00;">75–90</span></div>
-          <div class="score-row-item"><span class="score-name">LCP</span><div class="bar-outer"><div class="bar-inner" style="width:68%;background:#FF8B00;"></div></div><span class="score-val" style="color:#FF8B00;">1.8–3s</span></div>
-          <div class="score-row-item"><span class="score-name">TTFB</span><div class="bar-outer"><div class="bar-inner" style="width:60%;background:#FF8B00;"></div></div><span class="score-val" style="color:#FF8B00;">200–600ms</span></div>
+          <div class="score-row-item"><span class="score-name">Perf score</span><div class="bar-outer"><div class="bar-inner" style="width:92%;background:#FF8B00;"></div></div><span class="score-val" style="color:#FF8B00;">88–94</span></div>
+          <div class="score-row-item"><span class="score-name">LCP</span><div class="bar-outer"><div class="bar-inner" style="width:80%;background:#FF8B00;"></div></div><span class="score-val" style="color:#FF8B00;">1.2–2s</span></div>
+          <div class="score-row-item"><span class="score-name">TTFB</span><div class="bar-outer"><div class="bar-inner" style="width:72%;background:#FF8B00;"></div></div><span class="score-val" style="color:#FF8B00;">150–400ms</span></div>
         </div>
-        <div class="flow-note">Degrades with every plugin added post-launch</div>
+        <div class="flow-note">With minimal plugins + no Bootstrap + WP Rocket + Cloudflare — significantly higher than a typical WP build</div>
       </td>
       <td>
         <div class="score-block">
@@ -429,7 +433,7 @@
 
     <tr>
       <td>Performance durability</td>
-      <td><span class="badge badge-red">Fragile</span><br>One new plugin post-launch can undo months of optimization work</td>
+      <td><span class="badge badge-yellow">Manageable</span><br>With a strict minimal-plugin policy and custom-built features, performance drift is significantly reduced. The risk remains — one future plugin can regress scores — but the team has explicitly committed to avoiding that.</td>
       <td><span class="badge badge-yellow">Mixed</span><br>Frontend holds but WP backend remains a risk and a patch dependency</td>
       <td><span class="badge badge-green">Durable</span><br>No PHP, no plugins, no runtime — performance is baked in architecturally</td>
     </tr>
@@ -441,8 +445,135 @@
       <td><span class="badge badge-green">Minimal</span><br>No PHP on the public site. Static files on CDN. Sanity is a hosted SaaS.</td>
     </tr>
 
-    <!-- ── SECTION 03: CONTENT & FEATURES ── -->
-    <tr class="section-row"><td colspan="4">03 — Content Editor Experience &amp; Feature Velocity</td></tr>
+    <!-- ── SECTION 03: EXISTING SITE COMPLEXITY ── -->
+    <tr class="section-row"><td colspan="4">03 — Existing Site Complexity (solace.com)</td></tr>
+
+    <tr>
+      <td></td>
+      <td colspan="3">
+        <div style="background:#FFFAE6;border-left:3px solid #FF8B00;border-radius:4px;padding:10px 13px;font-size:12px;color:#974F0C;line-height:1.6;margin:4px 0;">
+          <strong>Context:</strong> solace.com is a large, complex, customised WordPress site — multi-level navigation, multiple product and solution verticals, custom post types, marketing integrations, gated content, and resource libraries built up over years. This affects the scope and risk profile of each path.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Content migration</td>
+      <td>
+        <span class="badge badge-green">Low complexity</span>
+        <ul class="cell-list">
+          <li class="good">WP-to-WP export/import — same data model, same platform</li>
+          <li class="good">Existing content structure carries over with no transformation layer</li>
+          <li class="good">Team's institutional knowledge of content architecture transfers fully</li>
+        </ul>
+      </td>
+      <td>
+        <span class="badge badge-red">Very high complexity</span>
+        <ul class="cell-list">
+          <li class="bad">WP content still lives in WP — no migration needed for the backend</li>
+          <li class="bad">But frontend must consume WP content via API, adding a translation layer between old content model and new templates</li>
+          <li class="bad">Complex relational content (products ↔ solutions ↔ industries) is especially difficult to surface cleanly via WPGraphQL</li>
+        </ul>
+      </td>
+      <td>
+        <span class="badge badge-red">High complexity</span>
+        <ul class="cell-list">
+          <li class="bad">Custom ETL pipeline required — every content type exported, transformed, and imported into Sanity's schema</li>
+          <li class="bad">On a site the size of solace.com, content migration alone is a significant project</li>
+          <li class="bad">Edge cases in content relationships surface mid-project, not during scoping</li>
+        </ul>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Custom post types &amp; fields</td>
+      <td>
+        <span class="badge badge-green">Direct carry-over</span>
+        <ul class="cell-list">
+          <li class="good">Custom post types and ACF fields re-registered in new theme — same structure, same logic</li>
+          <li class="good">No re-architecture required — agency builds on a known content model</li>
+        </ul>
+      </td>
+      <td>
+        <span class="badge badge-yellow">Partially preserved</span>
+        <ul class="cell-list">
+          <li class="warn">WP custom post types remain in WP backend — no re-architecture needed there</li>
+          <li class="warn">But all frontend templates for each CPT must be rebuilt in React from scratch</li>
+          <li class="warn">Any field not exposed via WPGraphQL needs manual schema extension — easy to miss on a complex site</li>
+        </ul>
+      </td>
+      <td>
+        <span class="badge badge-red">Full re-architecture</span>
+        <ul class="cell-list">
+          <li class="bad">Every CPT and field group redesigned from scratch as Sanity document types</li>
+          <li class="bad">Complex relational content (products ↔ solutions ↔ industries ↔ use cases) requires careful schema design — mistakes are costly post-launch</li>
+        </ul>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Marketing integrations (HubSpot, demo flows, gated content)</td>
+      <td>
+        <span class="badge badge-green">Established plugin ecosystem</span>
+        <ul class="cell-list">
+          <li class="good">HubSpot WP plugin, Gravity Forms, membership and gating plugins all have proven WP implementations</li>
+          <li class="good">Existing integration patterns from the current site can be carried forward</li>
+        </ul>
+      </td>
+      <td>
+        <span class="badge badge-red">Highest complexity</span>
+        <ul class="cell-list">
+          <li class="bad">WP plugins still in place on the backend but their frontend output (forms, modals, gating logic) must be fully rebuilt in React</li>
+          <li class="bad">Two systems means each integration must be tested and maintained across both WP and Next.js layers</li>
+        </ul>
+      </td>
+      <td>
+        <span class="badge badge-yellow">Custom wiring required</span>
+        <ul class="cell-list">
+          <li class="warn">Each integration (HubSpot, demo flows, gated resources) evaluated and built as a custom API integration</li>
+          <li class="warn">No direct plugin equivalents — more agency hours per integration, more potential failure points</li>
+        </ul>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Agency scoping &amp; risk</td>
+      <td>
+        <span class="badge badge-green">Lower risk</span>
+        <ul class="cell-list">
+          <li class="good">Agency audits existing WP site and maps directly to new build — known unknowns</li>
+          <li class="good">Rebuild stays within a familiar paradigm — surprises are manageable</li>
+        </ul>
+      </td>
+      <td>
+        <span class="badge badge-red">Highest risk</span>
+        <ul class="cell-list">
+          <li class="bad">Two systems to scope, build, and keep in sync — complexity compounds</li>
+          <li class="bad">Any mismatch between WP data model and Next.js templates surfaces as a frontend bug after launch</li>
+          <li class="bad">Ongoing: WP plugin updates can silently break GraphQL output to the frontend</li>
+        </ul>
+      </td>
+      <td>
+        <span class="badge badge-yellow">Medium risk</span>
+        <ul class="cell-list">
+          <li class="warn">Agency must fully audit existing site AND re-architect in a new paradigm — larger discovery phase</li>
+          <li class="warn">Platform migrations on complex sites surface unexpected dependencies mid-project</li>
+          <li class="warn">Larger component library to build from scratch — more hours, larger scope</li>
+        </ul>
+      </td>
+    </tr>
+
+    <tr class="verdict-row">
+      <td></td>
+      <td colspan="3">
+        <div class="verdict-blue verdict-text">
+          <strong>Note:</strong> The larger and more customised the existing site, the more the migration effort grows — particularly for Path C (Headless CMS). For a site the complexity of solace.com, content migration and re-architecture is a significant project in its own right, on top of the rebuild itself. Path B (Headless WP) avoids the content migration problem but creates a different set of integration and maintenance risks. This is a meaningful factor alongside performance and team fit.
+        </div>
+      </td>
+    </tr>
+
+    <!-- ── SECTION 04: CONTENT & FEATURES ── -->
+    <tr class="section-row"><td colspan="4">04 — Content Editor Experience &amp; Feature Velocity</td></tr>
 
     <tr>
       <td>Editor interface</td>
@@ -473,12 +604,12 @@
       <td>Feature build time</td>
       <td>
         <table class="i18n-table">
-          <tr><td>Contact form</td><td><span class="badge badge-green">Plugin — 30 min</span></td></tr>
-          <tr><td>Pricing table</td><td><span class="badge badge-yellow">Plugin + styling — 2–4 hrs</span></td></tr>
-          <tr><td>Multi-step form</td><td><span class="badge badge-yellow">Gravity Forms — 3–5 hrs</span></td></tr>
-          <tr><td>Animations</td><td><span class="badge badge-red">Plugin-constrained</span></td></tr>
-          <tr><td>SEO meta</td><td><span class="badge badge-green">Yoast — 10 min</span></td></tr>
-          <tr><td>i18n (6 languages)</td><td><span class="badge badge-red">WPML — expensive + painful</span></td></tr>
+          <tr><td>Contact form</td><td><span class="badge badge-green">Custom + AI — 30–60 min</span></td></tr>
+          <tr><td>Pricing table</td><td><span class="badge badge-green">Custom + AI — 1–2 hrs</span></td></tr>
+          <tr><td>Multi-step form</td><td><span class="badge badge-green">Custom + AI — 2–3 hrs</span></td></tr>
+          <tr><td>Animations</td><td><span class="badge badge-green">GSAP — full control, no plugin limits</span></td></tr>
+          <tr><td>SEO meta</td><td><span class="badge badge-green">Yoast — 10 min (one of the few justified plugins)</span></td></tr>
+          <tr><td>i18n (6 languages)</td><td><span class="badge badge-red">WPML — still required, expensive + complex</span></td></tr>
         </table>
       </td>
       <td>
@@ -503,8 +634,8 @@
       </td>
     </tr>
 
-    <!-- ── SECTION 04: TEAM ── -->
-    <tr class="section-row"><td colspan="4">04 — Team Capacity After Agency Handoff</td></tr>
+    <!-- ── SECTION 05: TEAM ── -->
+    <tr class="section-row"><td colspan="4">05 — Team Capacity After Agency Handoff</td></tr>
 
     <tr>
       <td>Full-stack dev</td>
@@ -537,7 +668,7 @@
         <div class="dev-block">
           <div class="cap-bar cap-full" style="width:100%"></div>
           <div class="dev-name-row">Full contribution</div>
-          <div class="dev-note">WP is home ground — page building, plugin config, content, theme edits all within reach independently</div>
+          <div class="dev-note">WP is home ground — page building, plugin config, content, theme edits all within reach independently. Existing institutional knowledge of solace.com's content structure is a direct asset in a WP rebuild.</div>
         </div>
       </td>
       <td>
@@ -586,8 +717,8 @@
       </td>
     </tr>
 
-    <!-- ── SECTION 05: MULTILINGUAL / i18n ── -->
-    <tr class="section-row"><td colspan="4">05 — Multilingual Support (6 Languages)</td></tr>
+    <!-- ── SECTION 06: MULTILINGUAL / i18n ── -->
+    <tr class="section-row"><td colspan="4">06 — Multilingual Support (6 Languages)</td></tr>
 
     <tr>
       <td>i18n approach</td>
@@ -679,8 +810,8 @@
       </td>
     </tr>
 
-    <!-- ── SECTION 06: LONG TERM ── -->
-    <tr class="section-row"><td colspan="4">06 — Long-term Ownership</td></tr>
+    <!-- ── SECTION 07: LONG TERM ── -->
+    <tr class="section-row"><td colspan="4">07 — Long-term Ownership</td></tr>
 
     <tr>
       <td>Ongoing maintenance</td>
@@ -707,7 +838,7 @@
       <td>Future-proof rating</td>
       <td>
         <div class="pips"><div class="pip pip-wp"></div><div class="pip pip-wp"></div><div class="pip pip-off"></div><div class="pip pip-off"></div><div class="pip pip-off"></div></div>
-        <div style="font-size:11px;color:#6B778C;">Same conversation revisited in 2 years</div>
+        <div style="font-size:11px;color:#6B778C;">Performance drift is the main long-term risk — manageable with discipline on a well-structured rebuild</div>
       </td>
       <td>
         <div class="pips"><div class="pip pip-wp"></div><div class="pip pip-wp"></div><div class="pip pip-wp"></div><div class="pip pip-off"></div><div class="pip pip-off"></div></div>
@@ -767,20 +898,23 @@
     <hr class="path-divider">
     <div class="path-section-label">Strengths</div>
     <ul class="path-list">
-      <li class="pro">Both devs fully productive from day one — zero ramp-up cost during the rebuild</li>
+      <li class="pro">Existing site complexity works in WP's favour — same platform means no content migration, no re-architecture, and the team's deep knowledge of solace.com's structure is directly usable</li>
+      <li class="pro">Both devs fully productive from day one — zero ramp-up during the rebuild</li>
       <li class="pro">WP specialist contributes fully across page building, content, plugin config, and theme work</li>
       <li class="pro">Seamless agency handoff — team already speaks the language of the codebase</li>
-      <li class="pro">Done properly (lean theme, WP Rocket, Cloudflare, strict plugin discipline), realistic Lighthouse target of 85–92 — clears all real-world Core Web Vitals thresholds</li>
+      <li class="pro">Team has committed to minimal plugins and custom-built features — the main performance argument against WP is directly addressed by this constraint</li>
+      <li class="pro">No Bootstrap — custom CSS means a leaner, faster frontend with no unused framework overhead</li>
+      <li class="pro">With minimal plugins + no Bootstrap + WP Rocket + Cloudflare, realistic Lighthouse target moves to 88–94 — closer to headless than a typical WP build</li>
       <li class="pro">Lowest build risk — familiar tools mean fewer surprises and faster delivery</li>
       <li class="pro">Full plugin ecosystem for future features — forms, search, integrations all available out of the box</li>
     </ul>
     <hr class="path-divider">
     <div class="path-section-label">Tradeoffs</div>
     <ul class="path-list">
-      <li class="con">Performance ceiling exists — bloat is managed, not eliminated. One new plugin can regress scores.</li>
-      <li class="con">Multilingual via WPML adds $99–199/yr licensing, plugin conflict risk, and 6× content duplication workload for the team</li>
-      <li class="con">Security patching is ongoing — WP core, plugins, and PHP all require regular attention</li>
-      <li class="con">Performance drift is likely as the site grows — same conversation may resurface in 18–24 months</li>
+      <li class="con">Performance ceiling still exists vs headless — PHP execution and TTFB remain architectural limitations regardless of plugin count</li>
+      <li class="con">Minimal plugin discipline requires ongoing team commitment — the constraint is only as strong as the team's adherence to it post-launch</li>
+      <li class="con">Multilingual via WPML adds licensing cost, plugin conflict risk, and 6× content duplication workload — unavoidable on WordPress regardless of plugin discipline</li>
+      <li class="con">Security patching is ongoing — WP core and PHP still require regular attention even with minimal plugins</li>
     </ul>
   </div>
 
@@ -801,6 +935,7 @@
     <hr class="path-divider">
     <div class="path-section-label">Tradeoffs</div>
     <ul class="path-list">
+      <li class="con">Migrating a large, complex existing WP site (custom post types, relational content, marketing integrations) to Sanity requires a significant content re-architecture and ETL effort — this is a project on top of the rebuild itself</li>
       <li class="con">Sanity Studio is a structured editor, not WYSIWYG — WP specialist loses the familiar page-building experience (Storyblok is an alternative with visual editing if this is a blocker)</li>
       <li class="con">WP specialist's dev contribution is initially limited to content — growing into component work takes time</li>
       <li class="con">Full-stack dev becomes sole owner of the codebase — no dev redundancy if unavailable</li>
@@ -811,7 +946,7 @@
 </div>
 
 <div class="decision-note">
-  <strong>The core question to answer:</strong> Both paths are legitimate for this team. The decision comes down to what matters most — <strong>team continuity and equal contribution from both devs</strong> (favours Traditional WP), or <strong>permanent performance ceiling and cleaner multilingual support</strong> (favours Headless CMS). Headless WP (Path B in the comparison above) carries the highest complexity with the weakest handoff outcome for this team — it combines the costs of both systems without the full benefits of either.
+  <strong>The core question to answer:</strong> Both paths are legitimate for this team. The decision comes down to three factors in combination — <strong>existing site complexity</strong> (favours Traditional WP — same platform, no migration), <strong>team continuity and equal dev contribution</strong> (favours Traditional WP), or <strong>permanent performance ceiling and cleaner multilingual support</strong> (favours Headless CMS). Headless WP (Path B) carries the highest complexity with the weakest handoff outcome for this team — it combines the costs of both systems without the full benefits of either.
 </div>
 
 <div class="agency-note">
