@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMS Platform Comparison — Agency Build</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: #172B4D;
+    line-height: 1.6;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    background: #fff;
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #172B4D;
+    margin: 0 0 6px;
+  }
+  h2 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #6B778C;
+    margin: 28px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #DFE1E6;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #6B778C;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 24px;
+  }
+  .context-box {
+    background: #E3FCEF;
+    border-left: 4px solid #00875A;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: #006644;
+    line-height: 1.6;
+  }
+  .context-box strong { font-weight: 600; }
+
+  /* ── MAIN TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+    font-size: 13px;
+  }
+  thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    border-bottom: 2px solid #DFE1E6;
+    background: #F4F5F7;
+  }
+  thead th.col-wp   { border-top: 3px solid #0052CC; }
+  thead th.col-hwp  { border-top: 3px solid #DE350B; }
+  thead th.col-hcms { border-top: 3px solid #00875A; }
+  .col-name { color: #6B778C; font-weight: 600; font-size: 12px; display: block; margin-bottom: 1px; }
+  .col-title { font-size: 14px; font-weight: 700; color: #172B4D; display: block; margin-bottom: 4px; }
+  .col-stack { font-size: 11px; color: #6B778C; display: block; margin-bottom: 6px; }
+
+  tbody tr td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #DFE1E6;
+    vertical-align: top;
+  }
+  tbody tr td:first-child {
+    font-weight: 600;
+    font-size: 12px;
+    color: #6B778C;
+    white-space: nowrap;
+    background: #F4F5F7;
+    width: 160px;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #FAFBFC; }
+  tbody tr:hover td:first-child { background: #F4F5F7; }
+
+  /* section header rows */
+  .section-row td {
+    background: #F4F5F7 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #5E6C84 !important;
+    padding: 8px 14px !important;
+    border-top: 1px solid #DFE1E6;
+  }
+
+  /* badges */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+  }
+  .badge-blue   { background: #DEEBFF; color: #0747A6; }
+  .badge-green  { background: #E3FCEF; color: #006644; }
+  .badge-red    { background: #FFEBE6; color: #BF2600; }
+  .badge-yellow { background: #FFFAE6; color: #974F0C; }
+  .badge-gray   { background: #F4F5F7; color: #42526E; border: 1px solid #DFE1E6; }
+
+  /* bullet lists inside cells */
+  .cell-list { margin: 6px 0 0; padding: 0; list-style: none; }
+  .cell-list li {
+    display: flex;
+    gap: 7px;
+    align-items: flex-start;
+    margin-bottom: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #172B4D;
+  }
+  .cell-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .cell-list li.good::before  { background: #00875A; }
+  .cell-list li.warn::before  { background: #FF8B00; }
+  .cell-list li.bad::before   { background: #DE350B; }
+
+  /* score bars */
+  .score-block { margin-top: 4px; }
+  .score-row-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .score-name { font-size: 11px; color: #6B778C; width: 70px; flex-shrink: 0; }
+  .bar-outer { flex: 1; height: 6px; background: #DFE1E6; border-radius: 3px; overflow: hidden; }
+  .bar-inner { height: 100%; border-radius: 3px; }
+  .score-val { font-size: 11px; font-weight: 600; width: 60px; text-align: right; }
+
+  /* flow steps */
+  .flow-steps { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+  .flow-item {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.4;
+  }
+  .flow-n { background: #F4F5F7; color: #42526E; }
+  .flow-y { background: #FFFAE6; color: #974F0C; }
+  .flow-r { background: #FFEBE6; color: #BF2600; }
+  .flow-g { background: #E3FCEF; color: #006644; }
+  .flow-num {
+    width: 16px; height: 16px; border-radius: 50%;
+    font-size: 9px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .fn-n { background: #DFE1E6; color: #42526E; }
+  .fn-y { background: #FFE380; color: #974F0C; }
+  .fn-r { background: #FF8F73; color: #BF2600; }
+  .fn-g { background: #79F2C0; color: #006644; }
+  .flow-note { font-size: 10px; color: #6B778C; font-style: italic; margin-top: 4px; }
+
+  /* verdict boxes */
+  .verdict-row td {
+    padding: 12px 14px !important;
+  }
+  .verdict-red {
+    background: #FFEBE6 !important;
+    border-left: 3px solid #DE350B;
+  }
+  .verdict-green {
+    background: #E3FCEF !important;
+    border-left: 3px solid #00875A;
+  }
+  .verdict-blue {
+    background: #DEEBFF !important;
+    border-left: 3px solid #0052CC;
+  }
+  .verdict-text { font-size: 12px; line-height: 1.6; }
+  .verdict-red .verdict-text { color: #BF2600; }
+  .verdict-green .verdict-text { color: #006644; }
+  .verdict-blue .verdict-text { color: #0747A6; }
+  .verdict-text strong { font-weight: 600; }
+
+  /* dev capacity bars */
+  .dev-block { margin-bottom: 4px; }
+  .dev-name-row { font-size: 12px; font-weight: 600; color: #172B4D; margin-bottom: 2px; }
+  .dev-note { font-size: 11px; color: #6B778C; margin-top: 2px; line-height: 1.4; }
+  .cap-bar { height: 5px; border-radius: 3px; margin: 3px 0; }
+  .cap-full { background: #00875A; }
+  .cap-part { background: #FF8B00; }
+  .cap-none { background: #DFE1E6; }
+
+  /* i18n feature table */
+  .i18n-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+  .i18n-table th { font-size: 11px; font-weight: 600; color: #6B778C; padding: 5px 8px; border-bottom: 1px solid #DFE1E6; text-align: left; background: #F4F5F7; }
+  .i18n-table td { padding: 6px 8px; border-bottom: 1px solid #DFE1E6; vertical-align: top; line-height: 1.4; color: #172B4D; }
+  .i18n-table tr:last-child td { border-bottom: none; }
+
+  /* cost comparison */
+  .cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+  .cost-box { border-radius: 6px; padding: 10px 12px; }
+  .cost-box-red { background: #FFEBE6; border: 1px solid #FF8F73; }
+  .cost-box-green { background: #E3FCEF; border: 1px solid #79F2C0; }
+  .cost-box-title { font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+  .cost-box-red .cost-box-title { color: #BF2600; }
+  .cost-box-green .cost-box-title { color: #006644; }
+  .cost-line { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid rgba(0,0,0,0.06); gap: 8px; }
+  .cost-line:last-child { border-bottom: none; }
+  .cost-label { color: #42526E; flex: 1; }
+  .cost-val { font-weight: 600; white-space: nowrap; }
+  .cost-box-red .cost-val { color: #BF2600; }
+  .cost-box-green .cost-val { color: #006644; }
+
+  /* final recommendation */
+  .final-rec {
+    background: #E3FCEF;
+    border: 1px solid #79F2C0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 24px;
+  }
+  .final-rec h3 { font-size: 16px; color: #006644; margin: 0 0 8px; }
+  .final-rec p { font-size: 13px; color: #006644; line-height: 1.7; margin: 0 0 12px; }
+  .final-rec p strong { font-weight: 700; }
+  .rec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+  .rec-item { border-radius: 5px; padding: 10px 12px; }
+  .rec-item-g { background: #ABF5D1; }
+  .rec-item-y { background: #FFE380; }
+  .rec-item-b { background: #B3D4FF; }
+  .rec-item-title { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+  .rec-item-g .rec-item-title { color: #006644; }
+  .rec-item-y .rec-item-title { color: #974F0C; }
+  .rec-item-b .rec-item-title { color: #0747A6; }
+  .rec-item-body { font-size: 11px; line-height: 1.5; }
+  .rec-item-g .rec-item-body { color: #00875A; }
+  .rec-item-y .rec-item-body { color: #974F0C; }
+  .rec-item-b .rec-item-body { color: #0052CC; }
+
+  .alt-note {
+    background: #EAE6FF;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin-top: 6px;
+    font-size: 11px;
+    color: #403294;
+    line-height: 1.5;
+  }
+  .alt-note strong { font-weight: 700; }
+
+  /* pip dots */
+  .pips { display: flex; gap: 4px; margin-bottom: 3px; }
+  .pip { width: 8px; height: 8px; border-radius: 50%; }
+  .pip-wp   { background: #0052CC; }
+  .pip-hcms { background: #00875A; }
+  .pip-off  { background: #DFE1E6; }
+</style>
+</head>
+<body>
+
+<h1>CMS Platform Comparison</h1>
+<div class="subtitle">Agency Build · 2-person Team Post-handoff · 6 Languages</div>
+
+<div class="context-box">
+  <strong>Context:</strong> External agency will handle the build. The 2-person internal team owns and maintains the site after handoff. The question isn't just "what's the best tech" — it's <strong>"what gives us the best site we can fully own and maintain without going back to the agency."</strong>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- MAIN 3-COLUMN TABLE -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:160px; background:#F4F5F7;"></th>
+      <th class="col-wp" style="width:30%;">
+        <span class="col-name">Path A</span>
+        <span class="col-title">Traditional WordPress</span>
+        <span class="col-stack">PHP + Page Builders + Plugins</span>
+        <span class="badge badge-blue">Safe but limited</span>
+      </th>
+      <th class="col-hwp" style="width:30%;">
+        <span class="col-name">Path B</span>
+        <span class="col-title">Headless WordPress</span>
+        <span class="col-stack">WP API + React / Next.js</span>
+        <span class="badge badge-red">Avoid</span>
+      </th>
+      <th class="col-hcms" style="width:30%;">
+        <span class="col-name">Path C — Recommended</span>
+        <span class="col-title">Headless CMS + Next.js</span>
+        <span class="col-stack">Sanity + Next.js / React</span>
+        <span class="badge badge-green">Recommended</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <!-- ── SECTION 01: AGENCY BUILD ── -->
+    <tr class="section-row"><td colspan="4">01 — Agency Build Considerations</td></tr>
+
+    <tr>
+      <td>Agency familiarity</td>
+      <td><span class="badge badge-green">Universal</span><br>Every agency knows WP. Easiest to scope and quote.</td>
+      <td><span class="badge badge-yellow">Specialist needed</span><br>Requires both WP + React expertise. Fewer options, higher rates.</td>
+      <td><span class="badge badge-green">Industry standard</span><br>Sanity + Next.js is a mainstream modern stack. Any quality agency knows it well.</td>
+    </tr>
+
+    <tr>
+      <td>Build efficiency</td>
+      <td><span class="badge badge-green">High</span><br>Fastest build time → most features built within scope.</td>
+      <td><span class="badge badge-red">Low</span><br>Two systems to build and wire. Roughly 1.4–1.6× the cost of a clean headless build.</td>
+      <td><span class="badge badge-green">High</span><br>Clean stack, no WP baggage. Agency hours go toward features, not compatibility fixes.</td>
+    </tr>
+
+    <tr>
+      <td>Post-handoff dependency</td>
+      <td>
+        <ul class="cell-list">
+          <li class="good">Both devs fully self-sufficient from day one</li>
+          <li class="warn">Complex custom dev may occasionally need agency</li>
+        </ul>
+      </td>
+      <td>
+        <ul class="cell-list">
+          <li class="bad">Every frontend change routes back to agency</li>
+          <li class="bad">Turns into an ongoing agency dependency post-launch</li>
+          <li class="bad">WP specialist has no path into the React codebase</li>
+        </ul>
+      </td>
+      <td>
+        <ul class="cell-list">
+          <li class="good">Full-stack dev owns and maintains Next.js codebase independently</li>
+          <li class="good">Content changes via Sanity Studio — no dev involvement needed</li>
+          <li class="warn">Net-new component types may need agency for complex builds</li>
+        </ul>
+      </td>
+    </tr>
+
+    <tr class="verdict-row">
+      <td></td>
+      <td colspan="3">
+        <div class="verdict-red verdict-text">
+          <strong>The Headless WP agency trap:</strong> You pay to build two systems. The agency leaves. The WP specialist can't touch the frontend codebase. Every UI change goes back to the agency. The agency becomes a permanent dependency for any frontend change.
+        </div>
+      </td>
+    </tr>
+
+    <!-- ── SECTION 02: ARCHITECTURE ── -->
+    <tr class="section-row"><td colspan="4">02 — Architecture &amp; Page Request Flow</td></tr>
+
+    <tr>
+      <td>Request flow</td>
+      <td>
+        <div class="flow-steps">
+          <div class="flow-item flow-g"><div class="flow-num fn-g">1</div>CDN serves cached HTML instantly</div>
+          <div class="flow-item flow-y"><div class="flow-num fn-y">2</div>Cache miss → PHP bootstraps WordPress</div>
+          <div class="flow-item flow-y"><div class="flow-num fn-y">3</div>MySQL query for content + options</div>
+          <div class="flow-item flow-r"><div class="flow-num fn-r">4</div>All active plugin hooks fire on every request</div>
+          <div class="flow-item flow-r"><div class="flow-num fn-r">5</div>Theme renders HTML, enqueues plugin JS/CSS</div>
+          <div class="flow-item flow-n"><div class="flow-num fn-n">6</div>WP Rocket caches result for next visitor</div>
+        </div>
+        <div class="flow-note">Steps 2–5 on every uncached request</div>
+      </td>
+      <td>
+        <div class="flow-steps">
+          <div class="flow-item flow-g"><div class="flow-num fn-g">1</div>CDN serves cached HTML</div>
+          <div class="flow-item flow-y"><div class="flow-num fn-y">2</div>Cache miss → WP PHP still executes</div>
+          <div class="flow-item flow-y"><div class="flow-num fn-y">3</div>WPGraphQL fetches content from WP</div>
+          <div class="flow-item flow-n"><div class="flow-num fn-n">4</div>Next.js SSR / ISR renders React page</div>
+          <div class="flow-item flow-r"><div class="flow-num fn-r">5</div>Two systems to keep in sync + patched</div>
+        </div>
+        <div class="flow-note">PHP still runs — WP costs not escaped</div>
+      </td>
+      <td>
+        <div class="flow-steps">
+          <div class="flow-item flow-g"><div class="flow-num fn-g">1</div>CDN edge node serves pre-built HTML</div>
+          <div class="flow-item flow-g"><div class="flow-num fn-g">2</div>No server execution — built at deploy time</div>
+          <div class="flow-item flow-g"><div class="flow-num fn-g">3</div>Only JS explicitly written by your team loads</div>
+          <div class="flow-item flow-g"><div class="flow-num fn-g">4</div>Next.js ISR keeps content fresh without full rebuilds</div>
+          <div class="flow-item flow-n"><div class="flow-num fn-n">5</div>Sanity webhook triggers incremental revalidation</div>
+        </div>
+        <div class="flow-note">Database never in the public request path</div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Performance ceiling</td>
+      <td>
+        <div class="score-block">
+          <div class="score-row-item"><span class="score-name">Perf score</span><div class="bar-outer"><div class="bar-inner" style="width:85%;background:#FF8B00;"></div></div><span class="score-val" style="color:#FF8B00;">75–90</span></div>
+          <div class="score-row-item"><span class="score-name">LCP</span><div class="bar-outer"><div class="bar-inner" style="width:68%;background:#FF8B00;"></div></div><span class="score-val" style="color:#FF8B00;">1.8–3s</span></div>
+          <div class="score-row-item"><span class="score-name">TTFB</span><div class="bar-outer"><div class="bar-inner" style="width:60%;background:#FF8B00;"></div></div><span class="score-val" style="color:#FF8B00;">200–600ms</span></div>
+        </div>
+        <div class="flow-note">Degrades with every plugin added post-launch</div>
+      </td>
+      <td>
+        <div class="score-block">
+          <div class="score-row-item"><span class="score-name">Perf score</span><div class="bar-outer"><div class="bar-inner" style="width:90%;background:#57D9A3;"></div></div><span class="score-val" style="color:#36B37E;">85–93</span></div>
+          <div class="score-row-item"><span class="score-name">LCP</span><div class="bar-outer"><div class="bar-inner" style="width:82%;background:#57D9A3;"></div></div><span class="score-val" style="color:#36B37E;">1.2–2s</span></div>
+          <div class="score-row-item"><span class="score-name">TTFB</span><div class="bar-outer"><div class="bar-inner" style="width:80%;background:#57D9A3;"></div></div><span class="score-val" style="color:#36B37E;">100–300ms</span></div>
+        </div>
+        <div class="flow-note">Better frontend, WP backend still a drag</div>
+      </td>
+      <td>
+        <div class="score-block">
+          <div class="score-row-item"><span class="score-name">Perf score</span><div class="bar-outer"><div class="bar-inner" style="width:98%;background:#00875A;"></div></div><span class="score-val" style="color:#00875A;">95–100</span></div>
+          <div class="score-row-item"><span class="score-name">LCP</span><div class="bar-outer"><div class="bar-inner" style="width:97%;background:#00875A;"></div></div><span class="score-val" style="color:#00875A;">0.4–1.2s</span></div>
+          <div class="score-row-item"><span class="score-name">TTFB</span><div class="bar-outer"><div class="bar-inner" style="width:99%;background:#00875A;"></div></div><span class="score-val" style="color:#00875A;">&lt;50ms</span></div>
+        </div>
+        <div class="flow-note">Architectural ceiling — doesn't erode over time</div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Performance durability</td>
+      <td><span class="badge badge-red">Fragile</span><br>One new plugin post-launch can undo months of optimization work</td>
+      <td><span class="badge badge-yellow">Mixed</span><br>Frontend holds but WP backend remains a risk and a patch dependency</td>
+      <td><span class="badge badge-green">Durable</span><br>No PHP, no plugins, no runtime — performance is baked in architecturally</td>
+    </tr>
+
+    <tr>
+      <td>Security surface</td>
+      <td><span class="badge badge-red">Large</span><br>WP is the #1 CMS attack target. Every plugin is a potential CVE.</td>
+      <td><span class="badge badge-red">Large + complex</span><br>Two attack surfaces, two separate patch cycles</td>
+      <td><span class="badge badge-green">Minimal</span><br>No PHP on the public site. Static files on CDN. Sanity is a hosted SaaS.</td>
+    </tr>
+
+    <!-- ── SECTION 03: CONTENT & FEATURES ── -->
+    <tr class="section-row"><td colspan="4">03 — Content Editor Experience &amp; Feature Velocity</td></tr>
+
+    <tr>
+      <td>Editor interface</td>
+      <td><span class="badge badge-green">Familiar</span><br>Gutenberg + Elementor — team knows this well</td>
+      <td><span class="badge badge-red">Broken workflow</span><br>WP dashboard intact but no live preview of actual Next.js frontend output</td>
+      <td>
+        <span class="badge badge-yellow">Structured editing</span><br>
+        Sanity Studio is clean and customisable. Not WYSIWYG but well-designed and fast.
+        <div class="alt-note"><strong>Alt CMS:</strong> If a visual drag-and-drop editor is a priority, <strong>Storyblok</strong> offers live side-by-side preview — the closest headless equivalent to Elementor. Worth raising with the agency as an alternative to Sanity.</div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Page builder support</td>
+      <td><span class="badge badge-green">Full</span><br>Elementor, Bricks, Divi — all work as expected</td>
+      <td><span class="badge badge-red">Fully breaks</span><br>Page builder output is PHP — useless in a headless context. Agency rebuilds all layouts in React.</td>
+      <td><span class="badge badge-yellow">Not applicable</span><br>Agency builds a component library; editors assemble pages from defined blocks in Sanity</td>
+    </tr>
+
+    <tr>
+      <td>Plugin ecosystem</td>
+      <td><span class="badge badge-green">Full — 60,000+ plugins</span><br>Forms, SEO, caching, sliders — install and go</td>
+      <td><span class="badge badge-red">Mostly broken</span><br>Agency rebuilds most plugin functionality in React anyway — you're paying for the plugin and the rebuild</td>
+      <td><span class="badge badge-blue">Purpose-built integrations</span><br>next-seo (meta), Formspree/Resend (forms), Algolia (search) — cleaner than equivalent plugins</td>
+    </tr>
+
+    <tr>
+      <td>Feature build time</td>
+      <td>
+        <table class="i18n-table">
+          <tr><td>Contact form</td><td><span class="badge badge-green">Plugin — 30 min</span></td></tr>
+          <tr><td>Pricing table</td><td><span class="badge badge-yellow">Plugin + styling — 2–4 hrs</span></td></tr>
+          <tr><td>Multi-step form</td><td><span class="badge badge-yellow">Gravity Forms — 3–5 hrs</span></td></tr>
+          <tr><td>Animations</td><td><span class="badge badge-red">Plugin-constrained</span></td></tr>
+          <tr><td>SEO meta</td><td><span class="badge badge-green">Yoast — 10 min</span></td></tr>
+          <tr><td>i18n (6 languages)</td><td><span class="badge badge-red">WPML — expensive + painful</span></td></tr>
+        </table>
+      </td>
+      <td>
+        <table class="i18n-table">
+          <tr><td>Contact form</td><td><span class="badge badge-red">Full React rebuild</span></td></tr>
+          <tr><td>Pricing table</td><td><span class="badge badge-red">Full React rebuild</span></td></tr>
+          <tr><td>Multi-step form</td><td><span class="badge badge-red">Full React rebuild</span></td></tr>
+          <tr><td>Animations</td><td><span class="badge badge-yellow">Possible, complex setup</span></td></tr>
+          <tr><td>SEO meta</td><td><span class="badge badge-yellow">Manual wiring from WP</span></td></tr>
+          <tr><td>i18n (6 languages)</td><td><span class="badge badge-yellow">Native Next.js routing</span></td></tr>
+        </table>
+      </td>
+      <td>
+        <table class="i18n-table">
+          <tr><td>Contact form</td><td><span class="badge badge-green">Formspree — 30 min</span></td></tr>
+          <tr><td>Pricing table</td><td><span class="badge badge-green">Custom + AI — 1 hr</span></td></tr>
+          <tr><td>Multi-step form</td><td><span class="badge badge-green">Custom + AI — 1–2 hrs</span></td></tr>
+          <tr><td>Animations</td><td><span class="badge badge-green">GSAP / Framer Motion</span></td></tr>
+          <tr><td>SEO meta</td><td><span class="badge badge-green">next-seo — 20 min</span></td></tr>
+          <tr><td>i18n (6 languages)</td><td><span class="badge badge-green">Native — see section 05</span></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ── SECTION 04: TEAM ── -->
+    <tr class="section-row"><td colspan="4">04 — Team Capacity After Agency Handoff</td></tr>
+
+    <tr>
+      <td>Full-stack dev</td>
+      <td>
+        <div class="dev-block">
+          <div class="cap-bar cap-full" style="width:100%"></div>
+          <div class="dev-name-row">Full contribution</div>
+          <div class="dev-note">WP, PHP, theme dev, plugin config — complete ownership of the entire stack</div>
+        </div>
+      </td>
+      <td>
+        <div class="dev-block">
+          <div class="cap-bar cap-full" style="width:100%"></div>
+          <div class="dev-name-row">Full contribution — sole owner</div>
+          <div class="dev-note">React/Next.js capable but becomes the only person who can touch the frontend. No backup.</div>
+        </div>
+      </td>
+      <td>
+        <div class="dev-block">
+          <div class="cap-bar cap-full" style="width:100%"></div>
+          <div class="dev-name-row">Full contribution</div>
+          <div class="dev-note">Owns the Next.js codebase, Sanity schema, deployment pipeline, and new component work post-handoff</div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>WP specialist</td>
+      <td>
+        <div class="dev-block">
+          <div class="cap-bar cap-full" style="width:100%"></div>
+          <div class="dev-name-row">Full contribution</div>
+          <div class="dev-note">WP is home ground — page building, plugin config, content, theme edits all within reach independently</div>
+        </div>
+      </td>
+      <td>
+        <div class="dev-block">
+          <div class="cap-bar cap-none" style="width:12%"></div>
+          <div class="dev-name-row">Content work only</div>
+          <div class="dev-note">No React background means zero path into the frontend codebase the agency hands off</div>
+        </div>
+      </td>
+      <td>
+        <div class="dev-block">
+          <div class="cap-bar cap-part" style="width:58%"></div>
+          <div class="dev-name-row">Content + grows into stack</div>
+          <div class="dev-note">Manages all content via Sanity Studio from day one. React component work learnable over time with WP template background as a foundation.</div>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Team ramp-up at handoff</td>
+      <td><span class="badge badge-green">None</span><br>Both devs productive from day one</td>
+      <td><span class="badge badge-red">Immediate bottleneck</span><br>WP specialist locked out of frontend codebase at handoff</td>
+      <td><span class="badge badge-yellow">Minimal</span><br>Sanity Studio is intuitive; full-stack dev is already at home in Next.js</td>
+    </tr>
+
+    <tr>
+      <td>Bus factor risk</td>
+      <td><span class="badge badge-green">Low</span><br>Either dev can cover any part of the stack</td>
+      <td><span class="badge badge-red">Critical</span><br>Full-stack dev is single point of failure on all frontend work</td>
+      <td><span class="badge badge-yellow">Low–moderate</span><br>Full-stack dev owns architecture; WP specialist covers content independently</td>
+    </tr>
+
+    <tr>
+      <td>Post-launch agency dependency</td>
+      <td><span class="badge badge-green">Low</span><br>Team fully self-sufficient — no agency needed for maintenance</td>
+      <td><span class="badge badge-red">High</span><br>Every frontend bug or UI change routes back to agency. Creates an ongoing dependency on the agency for all frontend changes.</td>
+      <td><span class="badge badge-green">Low</span><br>Full-stack dev owns codebase. Content needs zero dev involvement via Sanity Studio.</td>
+    </tr>
+
+    <tr class="verdict-row">
+      <td></td>
+      <td colspan="3">
+        <div class="verdict-red verdict-text">
+          <strong>The critical risk with Headless WP + agency:</strong> The full-stack dev can handle the Next.js codebase — but becomes the sole owner with zero backup. Any absence or context shift leaves the site without dev coverage. It's not a skills gap, it's a resourcing gap the stack creates unnecessarily.
+        </div>
+      </td>
+    </tr>
+
+    <!-- ── SECTION 05: MULTILINGUAL / i18n ── -->
+    <tr class="section-row"><td colspan="4">05 — Multilingual Support (6 Languages)</td></tr>
+
+    <tr>
+      <td>i18n approach</td>
+      <td><span class="badge badge-red">WPML plugin — complex + expensive</span><br>The standard WP multilingual plugin — notoriously the most complained-about plugin in the ecosystem</td>
+      <td><span class="badge badge-yellow">Split responsibility</span><br>WP manages content per language, Next.js handles routing. Two systems to keep in sync across 6 languages.</td>
+      <td><span class="badge badge-green">First-class native support</span><br>Next.js i18n routing built in. Sanity internationalisation plugin handles all language variants in one document.</td>
+    </tr>
+
+    <tr>
+      <td>URL routing</td>
+      <td>Manual config per language (/fr/, /de/ etc.) — possible but requires WPML setup + potential server config</td>
+      <td>Next.js handles frontend routing natively. WP backend still needs WPML or equivalent for content.</td>
+      <td><span class="badge badge-green">Automatic</span> — define 6 locales once in next.config.js. All routing handled automatically.</td>
+    </tr>
+
+    <tr>
+      <td>Content management per language</td>
+      <td><span class="badge badge-red">6× workload</span><br>Every page duplicated per language. 6 languages = 6 separate posts to manage per piece of content.</td>
+      <td><span class="badge badge-red">6× workload</span><br>Same WP duplication problem — content still managed as separate posts per language in WP.</td>
+      <td><span class="badge badge-green">1 document per page</span><br>All 6 language variants as fields in a single document. Edit, compare, and track completeness in one view.</td>
+    </tr>
+
+    <tr>
+      <td>hreflang / SEO</td>
+      <td>WPML handles hreflang but requires correct config. Known compatibility issues with Yoast.</td>
+      <td>Partial — Next.js can inject hreflang but WP side needs separate management.</td>
+      <td><span class="badge badge-green">Automatic</span> — next-seo handles hreflang injection globally. Set up once, works across all pages and all languages.</td>
+    </tr>
+
+    <tr>
+      <td>Machine translation</td>
+      <td>WPML integrates with DeepL and Google Translate — useful but costs extra per language</td>
+      <td>DeepL / Google Translate available but no native integration — custom wiring required</td>
+      <td><span class="badge badge-green">Sanity AI Assist</span> — built-in AI translation directly in Studio. Auto-populates all 6 languages from source content; editors review and approve.</td>
+    </tr>
+
+    <tr>
+      <td>Layout QA across languages</td>
+      <td><span class="badge badge-red">Every update</span><br>Every layout change in Elementor must be tested and verified across all 6 language versions</td>
+      <td><span class="badge badge-red">Every update</span><br>Two systems mean layout changes need QA on both WP and React layers across all languages</td>
+      <td><span class="badge badge-green">Not needed</span><br>Layout is code, language is data. A component change updates all 6 languages simultaneously.</td>
+    </tr>
+
+    <tr>
+      <td>Adding a 7th language later</td>
+      <td>Add WPML language, duplicate all content again — significant content team effort</td>
+      <td>Next.js config is easy; WP content duplication required for all existing pages</td>
+      <td><span class="badge badge-green">One config line</span> in next.config.js + add field to Sanity schema. Existing content structure adapts automatically.</td>
+    </tr>
+
+    <tr>
+      <td>i18n cost (ongoing)</td>
+      <td>
+        <div class="cost-grid">
+          <div class="cost-box cost-box-red">
+            <div class="cost-box-title">WordPress + WPML costs</div>
+            <div class="cost-line"><span class="cost-label">WPML Multilingual CMS licence</span><span class="cost-val">$99–199/yr</span></div>
+            <div class="cost-line"><span class="cost-label">DeepL translation add-on</span><span class="cost-val">$79/yr</span></div>
+            <div class="cost-line"><span class="cost-label">Plugin conflict management</span><span class="cost-val">Ongoing</span></div>
+            <div class="cost-line"><span class="cost-label">Layout QA per language</span><span class="cost-val">Every update</span></div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <ul class="cell-list">
+          <li class="bad">WPML still required on WP side — same cost as Path A</li>
+          <li class="bad">Additional dev time wiring WP + Next.js per language</li>
+        </ul>
+      </td>
+      <td>
+        <div class="cost-grid">
+          <div class="cost-box cost-box-green">
+            <div class="cost-box-title">Sanity + Next.js i18n costs</div>
+            <div class="cost-line"><span class="cost-label">Sanity i18n plugin</span><span class="cost-val">Free</span></div>
+            <div class="cost-line"><span class="cost-label">Sanity AI Assist (translation)</span><span class="cost-val">Included in paid plans</span></div>
+            <div class="cost-line"><span class="cost-label">Next.js i18n routing</span><span class="cost-val">Free / native</span></div>
+            <div class="cost-line"><span class="cost-label">Layout QA across languages</span><span class="cost-val">Not needed</span></div>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <tr class="verdict-row">
+      <td></td>
+      <td colspan="3">
+        <div class="verdict-green verdict-text">
+          <strong>Multilingual is one of the strongest arguments for going headless.</strong> WPML is expensive, conflict-prone, and multiplies your content team's workload by the number of languages. Sanity + Next.js treats i18n as a first-class feature: one document per page, all languages as fields, native URL routing, and AI-assisted translation built in. <strong>Important:</strong> i18n must be explicitly in scope in the agency brief — the Sanity content schema needs to be designed with localised fields from day one. Retrofitting it later is painful.
+        </div>
+      </td>
+    </tr>
+
+    <!-- ── SECTION 06: LONG TERM ── -->
+    <tr class="section-row"><td colspan="4">06 — Long-term Ownership</td></tr>
+
+    <tr>
+      <td>Ongoing maintenance</td>
+      <td><span class="badge badge-yellow">Moderate</span><br>WP core + plugin updates, PHP version management, security patches — recurring overhead</td>
+      <td><span class="badge badge-red">High</span><br>WP backend patches + Node/React dependency updates + two deployment pipelines</td>
+      <td><span class="badge badge-green">Low</span><br>Sanity is managed SaaS. Next.js on Vercel handles deploys. Minimal ops overhead.</td>
+    </tr>
+
+    <tr>
+      <td>Performance over time</td>
+      <td><span class="badge badge-red">Degrades</span><br>Plugin and content growth erodes Lighthouse scores post-launch</td>
+      <td><span class="badge badge-yellow">Partially stable</span><br>Frontend holds, WP backend drifts</td>
+      <td><span class="badge badge-green">Stable</span><br>No runtime means no performance drift — architecture protects it</td>
+    </tr>
+
+    <tr>
+      <td>Multi-channel readiness</td>
+      <td><span class="badge badge-red">No</span><br>Content locked in WP templates, not reusable elsewhere</td>
+      <td><span class="badge badge-yellow">Possible</span><br>WP API usable but adds complexity</td>
+      <td><span class="badge badge-green">Yes</span><br>Sanity is API-first. Content reusable across web, app, email, anywhere.</td>
+    </tr>
+
+    <tr>
+      <td>Future-proof rating</td>
+      <td>
+        <div class="pips"><div class="pip pip-wp"></div><div class="pip pip-wp"></div><div class="pip pip-off"></div><div class="pip pip-off"></div><div class="pip pip-off"></div></div>
+        <div style="font-size:11px;color:#6B778C;">Same conversation revisited in 2 years</div>
+      </td>
+      <td>
+        <div class="pips"><div class="pip pip-wp"></div><div class="pip pip-wp"></div><div class="pip pip-wp"></div><div class="pip pip-off"></div><div class="pip pip-off"></div></div>
+        <div style="font-size:11px;color:#6B778C;">Modern frontend, WP debt still attached</div>
+      </td>
+      <td>
+        <div class="pips"><div class="pip pip-hcms"></div><div class="pip pip-hcms"></div><div class="pip pip-hcms"></div><div class="pip pip-hcms"></div><div class="pip pip-hcms"></div></div>
+        <div style="font-size:11px;color:#6B778C;">Solves the problem architecturally</div>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- FINAL RECOMMENDATION -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<h2>Summary — Two Strong Paths</h2>
+
+<style>
+  .two-paths { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .path-card { border-radius: 8px; padding: 16px 18px; border: 1px solid #DFE1E6; background: #fff; }
+  .path-card.path-wp   { border-top: 4px solid #0052CC; }
+  .path-card.path-hcms { border-top: 4px solid #00875A; }
+  .path-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+  .path-wp   .path-eyebrow { color: #0747A6; }
+  .path-hcms .path-eyebrow { color: #006644; }
+  .path-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .path-wp   .path-title { color: #0052CC; }
+  .path-hcms .path-title { color: #00875A; }
+  .path-stack { font-size: 12px; color: #6B778C; margin-bottom: 12px; }
+  .path-section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 10px 0 5px; }
+  .path-wp   .path-section-label { color: #0747A6; }
+  .path-hcms .path-section-label { color: #006644; }
+  .path-list { list-style: none; padding: 0; margin: 0; }
+  .path-list li { display: flex; gap: 7px; align-items: flex-start; font-size: 12px; line-height: 1.5; color: #172B4D; margin-bottom: 5px; }
+  .path-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .path-list li.pro::before  { background: #00875A; }
+  .path-list li.con::before  { background: #DE350B; }
+  .path-divider { border: none; border-top: 1px solid #DFE1E6; margin: 10px 0; }
+  .decision-note { background: #F4F5F7; border-radius: 8px; padding: 14px 18px; font-size: 13px; color: #42526E; line-height: 1.7; margin-bottom: 20px; }
+  .decision-note strong { color: #172B4D; font-weight: 700; }
+  .agency-note { background: #FFFAE6; border-left: 4px solid #FF8B00; border-radius: 4px; padding: 12px 16px; font-size: 13px; color: #974F0C; line-height: 1.6; }
+  .agency-note strong { font-weight: 700; }
+  .agency-note ul { margin: 8px 0 0 16px; padding: 0; }
+  .agency-note ul li { margin-bottom: 4px; font-size: 12px; }
+</style>
+
+<div class="two-paths">
+
+  <div class="path-card path-wp">
+    <div class="path-eyebrow">Path A</div>
+    <div class="path-title">Traditional WordPress</div>
+    <div class="path-stack">PHP · Page builders · Plugins · WP Rocket · Cloudflare</div>
+    <hr class="path-divider">
+    <div class="path-section-label">Strengths</div>
+    <ul class="path-list">
+      <li class="pro">Both devs fully productive from day one — zero ramp-up cost during the rebuild</li>
+      <li class="pro">WP specialist contributes fully across page building, content, plugin config, and theme work</li>
+      <li class="pro">Seamless agency handoff — team already speaks the language of the codebase</li>
+      <li class="pro">Done properly (lean theme, WP Rocket, Cloudflare, strict plugin discipline), realistic Lighthouse target of 85–92 — clears all real-world Core Web Vitals thresholds</li>
+      <li class="pro">Lowest build risk — familiar tools mean fewer surprises and faster delivery</li>
+      <li class="pro">Full plugin ecosystem for future features — forms, search, integrations all available out of the box</li>
+    </ul>
+    <hr class="path-divider">
+    <div class="path-section-label">Tradeoffs</div>
+    <ul class="path-list">
+      <li class="con">Performance ceiling exists — bloat is managed, not eliminated. One new plugin can regress scores.</li>
+      <li class="con">Multilingual via WPML adds $99–199/yr licensing, plugin conflict risk, and 6× content duplication workload for the team</li>
+      <li class="con">Security patching is ongoing — WP core, plugins, and PHP all require regular attention</li>
+      <li class="con">Performance drift is likely as the site grows — same conversation may resurface in 18–24 months</li>
+    </ul>
+  </div>
+
+  <div class="path-card path-hcms">
+    <div class="path-eyebrow">Path B</div>
+    <div class="path-title">Headless CMS + Next.js</div>
+    <div class="path-stack">Sanity · Next.js / React · Vercel · Formspree · next-seo</div>
+    <hr class="path-divider">
+    <div class="path-section-label">Strengths</div>
+    <ul class="path-list">
+      <li class="pro">Performance solved architecturally — 95–100 Lighthouse, sub-second LCP, doesn't erode over time as the site grows</li>
+      <li class="pro">Multilingual built in natively — one document per page holds all 6 languages, no WPML, no duplication, no licensing fee. Sanity AI Assist auto-translates for editors to review.</li>
+      <li class="pro">Full-stack dev owns and maintains the Next.js codebase independently post-handoff</li>
+      <li class="pro">WP specialist manages all content via Sanity Studio from day one — no dev involvement needed for content updates</li>
+      <li class="pro">No PHP attack surface on the public site — security maintenance drops significantly</li>
+      <li class="pro">Future-proof — API-first content reusable across web, mobile app, email, and any future channel</li>
+    </ul>
+    <hr class="path-divider">
+    <div class="path-section-label">Tradeoffs</div>
+    <ul class="path-list">
+      <li class="con">Sanity Studio is a structured editor, not WYSIWYG — WP specialist loses the familiar page-building experience (Storyblok is an alternative with visual editing if this is a blocker)</li>
+      <li class="con">WP specialist's dev contribution is initially limited to content — growing into component work takes time</li>
+      <li class="con">Full-stack dev becomes sole owner of the codebase — no dev redundancy if unavailable</li>
+      <li class="con">i18n schema must be designed from day one — needs to be explicitly in scope in the agency brief</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="decision-note">
+  <strong>The core question to answer:</strong> Both paths are legitimate for this team. The decision comes down to what matters most — <strong>team continuity and equal contribution from both devs</strong> (favours Traditional WP), or <strong>permanent performance ceiling and cleaner multilingual support</strong> (favours Headless CMS). Headless WP (Path C in the comparison above) is not recommended under either priority — it delivers the highest cost and complexity with the weakest handoff outcome for this team.
+</div>
+
+<div class="agency-note">
+  <strong>Regardless of which path is chosen — things to lock into the agency brief:</strong>
+  <ul>
+    <li>6-language multilingual support must be in scope from day one, not retrofitted later</li>
+    <li>Full documentation and a codebase walkthrough session for the internal team before final payment</li>
+    <li>If headless: specify Sanity + Next.js explicitly — not just "headless CMS" — and confirm i18n schema is designed upfront</li>
+    <li>If WordPress: specify performance targets (85+ Lighthouse on key pages) as an acceptance criterion, not an aspiration</li>
+  </ul>
+</div>
+
+</body>
+</html>
