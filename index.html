@@ -308,12 +308,61 @@
       <th class="col-hcms" style="width:29%;">
         <span class="col-name">Path C</span>
         <span class="col-title">Headless CMS + Next.js</span>
-        <span class="col-stack">Sanity + Next.js / React</span>
+        <span class="col-stack">Storyblok or Sanity + Next.js / React</span>
         <span class="badge badge-green">Path C</span>
       </th>
     </tr>
   </thead>
   <tbody>
+
+    <!-- ── SECTION 00: MARKETING SELF-SERVE ── -->
+    <tr class="section-row"><td colspan="4">00 — Marketing Self-serve Requirement</td></tr>
+
+    <tr>
+      <td></td>
+      <td colspan="3">
+        <div style="background:#DEEBFF;border-left:3px solid #0052CC;border-radius:4px;padding:10px 13px;font-size:12px;color:#0747A6;line-height:1.6;margin:4px 0;">
+          <strong>Manager requirement:</strong> "I want to give people on the Marketing team the ability to self-serve things like landing pages as needed as opposed to going through the web team for everything." This is a primary requirement that directly affects which platform and CMS is the right fit.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Marketing can create a landing page independently</td>
+      <td><span class="badge badge-green">Yes — fully</span><br>Elementor / Bricks gives marketing true drag-and-drop page creation. Duplicate an existing page, swap content, publish — zero dev involvement required.</td>
+      <td><span class="badge badge-red">No</span><br>Page builders break in headless WP. Any new landing page layout requires a dev to build the React component first. This makes the problem worse, not better.</td>
+      <td><span class="badge badge-yellow">Partially — depends on CMS</span><br>With <strong>Storyblok</strong>: visual drag-and-drop editor, live preview, marketing assembles pages from components — close to WP self-serve. With <strong>Sanity</strong>: structured fields only, no visual layout freedom — not suitable for this requirement.</td>
+    </tr>
+
+    <tr>
+      <td>Preview before publishing</td>
+      <td><span class="badge badge-green">Live WYSIWYG</span><br>Marketing sees exactly what will be published in real time — no surprises</td>
+      <td><span class="badge badge-red">Not available</span><br>Edits made in WP dashboard, output renders on a separate Next.js frontend — marketing can't see the result</td>
+      <td><span class="badge badge-yellow">Storyblok: live preview</span><br>Side-by-side visual editor with real-time preview. Sanity requires navigating to a separate preview URL — less intuitive for non-technical users.</td>
+    </tr>
+
+    <tr>
+      <td>Add a new section type to a page</td>
+      <td><span class="badge badge-green">Marketing does it</span><br>Drag a new section from Elementor's library — no dev involved, no wait time</td>
+      <td><span class="badge badge-red">Dev required</span><br>New section = new React component = dev build + deploy before marketing can use it</td>
+      <td><span class="badge badge-yellow">Dev builds once, marketing reuses</span><br>Agency builds the component library upfront. Marketing assembles freely from it. New section types still need dev — but routine page building does not.</td>
+    </tr>
+
+    <tr>
+      <td>Publish without web team involvement</td>
+      <td><span class="badge badge-green">Yes — for any content or layout</span></td>
+      <td><span class="badge badge-red">No — dev required for any layout work</span></td>
+      <td><span class="badge badge-yellow">Yes — within the component library. Net-new layouts need dev.</span></td>
+    </tr>
+
+    <tr class="verdict-row">
+      <td></td>
+      <td colspan="3">
+        <div class="verdict-blue verdict-text">
+          <strong>Key clarification for the manager:</strong> "Self-serve" can mean two things — (A) marketing can build any layout they imagine with full creative freedom, or (B) marketing can assemble pages from an approved set of pre-built components without calling the web team. Option A points to Traditional WordPress. Option B is achievable with Storyblok (not Sanity). Both are valid — but they lead to different platform decisions. If Path C is chosen, the CMS should be <strong>Storyblok</strong>, not Sanity, to satisfy this requirement.
+        </div>
+      </td>
+    </tr>
 
     <!-- ── SECTION 01: AGENCY BUILD ── -->
     <tr class="section-row"><td colspan="4">01 — Agency Build Considerations</td></tr>
@@ -921,7 +970,7 @@
   <div class="path-card path-hcms">
     <div class="path-eyebrow">Path B</div>
     <div class="path-title">Headless CMS + Next.js</div>
-    <div class="path-stack">Sanity · Next.js / React · Vercel · Formspree · next-seo</div>
+    <div class="path-stack">Storyblok (recommended for self-serve) or Sanity · Next.js / React · Vercel · next-seo</div>
     <hr class="path-divider">
     <div class="path-section-label">Strengths</div>
     <ul class="path-list">
@@ -936,7 +985,7 @@
     <div class="path-section-label">Tradeoffs</div>
     <ul class="path-list">
       <li class="con">Migrating a large, complex existing WP site (custom post types, relational content, marketing integrations) to Sanity requires a significant content re-architecture and ETL effort — this is a project on top of the rebuild itself</li>
-      <li class="con">Sanity Studio is a structured editor, not WYSIWYG — WP specialist loses the familiar page-building experience (Storyblok is an alternative with visual editing if this is a blocker)</li>
+      <li class="con">CMS choice matters here — <strong>Storyblok</strong> has a visual editor suitable for marketing self-serve; Sanity does not. If Sanity is chosen, marketing will still need web team involvement for landing page layouts.</li>
       <li class="con">WP specialist's dev contribution is initially limited to content — growing into component work takes time</li>
       <li class="con">Full-stack dev becomes sole owner of the codebase — no dev redundancy if unavailable</li>
       <li class="con">i18n schema must be designed from day one — needs to be explicitly in scope in the agency brief</li>
